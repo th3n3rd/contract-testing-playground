@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class CartService {
+class CartService {
 
     private final CartRepository cartRepository;
+    private final CatalogueService catalogueService;
 
-    CartService(CartRepository cartRepository) {
+    CartService(CartRepository cartRepository, CatalogueService catalogueService) {
         this.cartRepository = cartRepository;
+        this.catalogueService = catalogueService;
     }
 
     Cart createCart() {
@@ -18,20 +20,27 @@ public class CartService {
     }
 
     Cart addItemToCart(UUID cartId, UUID productId) {
-        existOrThrow(cartId);
+        cartExistOrThrow(cartId);
+        productExistsOrThrow(productId);
         var cart = cartRepository.getById(cartId);
         cart.addItem(Item.of(productId));
         return cartRepository.save(cart);
     }
 
     Cart getCart(UUID cartId) {
-        existOrThrow(cartId);
+        cartExistOrThrow(cartId);
         return cartRepository.getById(cartId);
     }
 
-    private void existOrThrow(UUID cartId) {
+    private void cartExistOrThrow(UUID cartId) {
         if (!cartRepository.existsById(cartId)) {
             throw new CartNotFoundException(cartId);
+        }
+    }
+
+    private void productExistsOrThrow(UUID productId) {
+        if (!catalogueService.productExists(productId)) {
+            throw new ProductNotFoundException(productId);
         }
     }
 }

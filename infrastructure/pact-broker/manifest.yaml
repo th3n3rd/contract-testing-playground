@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pact-broker-server
+    app.kubernetes.io/part-of: pact-broker
+  name: pact-broker-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pact-broker-server
+  template:
+    metadata:
+      labels:
+        app: pact-broker-server
+    spec:
+      containers:
+      - image: pactfoundation/pact-broker:2.93.2.0
+        name: pact-broker-server
+        env:
+          - name: PACT_BROKER_DATABASE_ADAPTER
+            value: sqlite
+          - name: PACT_BROKER_DATABASE_NAME
+            value: pact-broker
+          - name: PACT_BROKER_PUBLIC_HEARTBEAT
+            value: "true"
+        ports:
+          - containerPort: 9292
+        livenessProbe:
+          httpGet:
+            path: /diagnostic/status/heartbeat
+            port: 9292
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /diagnostic/status/heartbeat
+            port: 9292
+          initialDelaySeconds: 3
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pact-broker-server
+  labels:
+    app.kubernetes.io/part-of: pact-broker
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9292
+      targetPort: 9292
+  selector:
+    app: pact-broker-server

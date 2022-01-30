@@ -9,13 +9,12 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>cart</artifactId>
+	<artifactId>catalogue</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cart</name>
+	<name>catalogue</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
-		<spring-cloud.version>2021.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -29,14 +28,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-loadbalancer</artifactId>
 		</dependency>
 
 		<dependency>
@@ -55,22 +46,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>au.com.dius.pact.consumer</groupId>
-			<artifactId>junit5</artifactId>
+			<groupId>au.com.dius.pact.provider</groupId>
+			<artifactId>junit5spring</artifactId>
 			<version>4.3.4</version>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -80,8 +60,6 @@
 				<version>4.3.4</version>
 				<configuration>
 					<pactBrokerUrl>http://localhost:9292</pactBrokerUrl>
-					<pactDirectory>${project.build.directory}/pacts</pactDirectory>
-					<skipPactPublish>false</skipPactPublish>
 				</configuration>
 			</plugin>
 			<plugin>

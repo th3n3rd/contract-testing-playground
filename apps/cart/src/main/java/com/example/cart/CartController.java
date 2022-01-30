@@ -11,11 +11,11 @@ import java.util.UUID;
 
 @RestController
 @ResponseBody
-public class CartController {
+class CartController {
 
     private final CartService cartService;
 
-    public CartController(CartService cartService) {
+    CartController(CartService cartService) {
         this.cartService = cartService;
     }
 

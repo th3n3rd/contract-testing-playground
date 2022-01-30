@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({
-    CartService.class
+    CartService.class,
+    CatalogueService.class
 })
 class CartServiceTests {
 
@@ -21,6 +22,9 @@ class CartServiceTests {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @MockBean
+    private CatalogueService catalogueService;
 
     @Test
     void cartNotFoundWhenRetrievingCart() {
@@ -35,6 +39,16 @@ class CartServiceTests {
         assertThrows(CartNotFoundException.class, () -> cartService.addItemToCart(
             unknownCartId,
             anyProductId
+        ));
+    }
+
+    @Test
+    void productNotFoundWHenAddingAnItem() {
+        var cart = cartService.createCart();
+        var unknownProductId = UUID.randomUUID();
+        assertThrows(ProductNotFoundException.class, () -> cartService.addItemToCart(
+            cart.getId(),
+            unknownProductId
         ));
     }
 }

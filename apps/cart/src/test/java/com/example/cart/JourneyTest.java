@@ -1,33 +1,48 @@
 package com.example.cart;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.cart.Fixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class JourneyTest {
+class JourneyTest {
 
     @Autowired
     private TestRestTemplate restClient;
+
+    @MockBean
+    private CatalogueService catalogueService;
+
+    @BeforeEach
+    void setUp() {
+        givenProductsExist(
+            Products.shirt,
+            Products.trousers
+        );
+    }
 
     @Test
     void typicalJourney() {
         var cart = createCart();
 
-        var shirt = selectItem();
+        var shirt = selectItem(Products.shirt);
         addItemToCart(cart, shirt);
 
         assertItemsInCart(cart, List.of(shirt));
 
-        var trousers = selectItem();
+        var trousers = selectItem(Products.trousers);
         addItemToCart(cart, trousers);
 
         assertItemsInCart(cart, List.of(shirt, trousers));
@@ -59,8 +74,13 @@ public class JourneyTest {
             );
     }
 
-    private AddItemToCartRequest selectItem() {
-        return new AddItemToCartRequest(UUID.randomUUID());
+    private AddItemToCartRequest selectItem(UUID productId) {
+        return new AddItemToCartRequest(productId);
     }
 
+    private void givenProductsExist(UUID... products) {
+        for (UUID productId : products) {
+            given(catalogueService.productExists(productId)).willReturn(true);
+        }
+    }
 }

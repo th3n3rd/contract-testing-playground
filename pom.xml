@@ -6,8 +6,4 @@
     <groupId>com.eaxmple</groupId>
     <artifactId>e-commerce</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
-    <modules>
-        <module>apps/cart</module>
-    </modules>
 </project>

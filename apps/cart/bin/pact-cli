@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker run -it --rm \
+ -v "$PWD:/$PWD" \
+ -w "$PWD" \
+ -e "PACT_BROKER_BASE_URL=http://host.docker.internal:9292" \
+ pactfoundation/pact-cli:latest "$@"
