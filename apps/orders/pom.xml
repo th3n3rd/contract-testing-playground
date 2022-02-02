@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>cart</artifactId>
+	<artifactId>orders</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cart</name>
+	<name>orders</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
@@ -29,14 +29,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-loadbalancer</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -74,11 +66,6 @@
 			<artifactId>junit5</artifactId>
 			<version>4.3.4</version>
 		</dependency>
-		<dependency>
-			<groupId>au.com.dius.pact.provider</groupId>
-			<artifactId>junit5spring</artifactId>
-			<version>4.3.4</version>
-		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -100,8 +87,6 @@
 				<version>4.3.4</version>
 				<configuration>
 					<pactBrokerUrl>http://localhost:9292</pactBrokerUrl>
-					<pactDirectory>${project.build.directory}/pacts</pactDirectory>
-					<skipPactPublish>false</skipPactPublish>
 				</configuration>
 			</plugin>
 			<plugin>

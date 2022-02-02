@@ -1,6 +1,7 @@
 package com.example.cart;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,12 @@ class CartController {
         @RequestBody AddItemToCartRequest payload
     ) {
         var cart = cartService.addItemToCart(cartId, payload.getProductId());
+        return CartResponse.from(cart);
+    }
+
+    @PostMapping("/carts/{cartId}/checkout")
+    CartResponse checkoutCart(@PathVariable UUID cartId) {
+        var cart = cartService.checkoutCart(cartId);
         return CartResponse.from(cart);
     }
 }
