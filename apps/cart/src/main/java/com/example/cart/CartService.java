@@ -20,22 +20,16 @@ class CartService {
     }
 
     Cart addItemToCart(UUID cartId, UUID productId) {
-        cartExistOrThrow(cartId);
+        var cart = getCart(cartId);
         productExistsOrThrow(productId);
-        var cart = cartRepository.getById(cartId);
         cart.addItem(Cart.Item.of(productId));
         return cartRepository.save(cart);
     }
 
     Cart getCart(UUID cartId) {
-        cartExistOrThrow(cartId);
-        return cartRepository.getById(cartId);
-    }
-
-    private void cartExistOrThrow(UUID cartId) {
-        if (!cartRepository.existsById(cartId)) {
-            throw new CartNotFoundException(cartId);
-        }
+        return cartRepository
+            .findById(cartId)
+            .orElseThrow(() -> new CartNotFoundException(cartId));
     }
 
     private void productExistsOrThrow(UUID productId) {
