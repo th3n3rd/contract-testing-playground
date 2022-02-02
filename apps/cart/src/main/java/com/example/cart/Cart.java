@@ -17,7 +17,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cart {
+class Cart {
     @Id
     private UUID id;
 

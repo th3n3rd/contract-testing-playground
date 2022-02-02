@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
+class ProductResponse {
     private UUID id;
 
     static ProductResponse from(Product product) {

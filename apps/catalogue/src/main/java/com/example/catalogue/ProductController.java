@@ -9,11 +9,11 @@ import java.util.UUID;
 
 @RestController
 @ResponseBody
-public class ProductController {
+class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    ProductController(ProductService productService) {
         this.productService = productService;
     }
 

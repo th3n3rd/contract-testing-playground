@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(TestMessageInfra.class)
 @SpringBootTest
-public class JourneyTest {
+class JourneyTest {
 
     @Autowired
     private TestMessageInfra messagingInfra;
