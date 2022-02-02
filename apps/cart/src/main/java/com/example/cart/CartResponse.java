@@ -16,7 +16,7 @@ class CartResponse {
             cart.getId(),
             cart.getItems()
                 .stream()
-                .map(Item::getProductId)
+                .map(Cart.Item::getProductId)
                 .collect(Collectors.toList())
         );
     }

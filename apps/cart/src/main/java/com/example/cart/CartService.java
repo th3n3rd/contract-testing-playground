@@ -23,7 +23,7 @@ class CartService {
         cartExistOrThrow(cartId);
         productExistsOrThrow(productId);
         var cart = cartRepository.getById(cartId);
-        cart.addItem(Item.of(productId));
+        cart.addItem(Cart.Item.of(productId));
         return cartRepository.save(cart);
     }
 

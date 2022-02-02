@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,8 +20,8 @@ public class Cart {
     @Id
     private UUID id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Item> items = new ArrayList<>();
+    @ElementCollection
+    private List<Item> items;
 
     static Cart create() {
         return new Cart(UUID.randomUUID(), new ArrayList<>());
@@ -31,4 +31,16 @@ public class Cart {
         items.add(item);
     }
 
+    @Data
+    @Embeddable
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class Item {
+        private UUID productId;
+
+        static Item of(UUID productId) {
+            return new Item(productId);
+        }
+
+    }
 }
