@@ -12,7 +12,7 @@ import static com.example.orders.Fixtures.Products;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-@Import(TestMessageInfra.class)
+@Import(TestMessagingInfra.class)
 @SpringBootTest
 class OrdersServiceTests {
 

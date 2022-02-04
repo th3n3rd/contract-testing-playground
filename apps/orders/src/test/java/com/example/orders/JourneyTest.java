@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 import static com.example.orders.Fixtures.Products;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import(TestMessageInfra.class)
+@Import(TestMessagingInfra.class)
 @SpringBootTest
 class JourneyTest {
 
     @Autowired
-    private TestMessageInfra messagingInfra;
+    private TestMessagingInfra messagingInfra;
 
     @BeforeEach
     void setUp() {

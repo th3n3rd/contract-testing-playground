@@ -13,6 +13,6 @@ class MessagingGateway {
     }
 
     void send(Object message) {
-        streamBridge.send(MessageChannels.Out, message);
+        streamBridge.send(MessagingChannels.Out, message);
     }
 }

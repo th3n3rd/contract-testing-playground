@@ -24,12 +24,12 @@ import static org.mockito.BDDMockito.then;
 
 @PactTestFor(pactVersion = PactSpecVersion.V3, providerType = ProviderType.ASYNCH)
 @ExtendWith(PactConsumerTestExt.class)
-@Import(TestMessageInfra.class)
+@Import(TestMessagingInfra.class)
 @SpringBootTest
 class CheckoutStartedHandlerTests {
 
     @Autowired
-    private TestMessageInfra messageInfra;
+    private TestMessagingInfra messageInfra;
 
     @MockBean
     private Consumer<CheckoutStarted> checkoutStartedHandler;
