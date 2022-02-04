@@ -3,6 +3,7 @@ package com.example.cart;
 import au.com.dius.pact.provider.PactVerifyProvider;
 import au.com.dius.pact.provider.junit5.MessageTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
+import au.com.dius.pact.provider.junitsupport.IgnoreNoPactsToVerify;
 import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
@@ -16,12 +17,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.example.cart.Fixtures.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+@IgnoreNoPactsToVerify
 @PactBroker
 @Provider("cart")
 @Import(TestMessagingInfra.class)
@@ -42,14 +45,18 @@ public class MessageContractTests {
 
     @BeforeEach
     void setUp(PactVerificationContext context) {
-        given(catalogueService.productExists(any())).willReturn(true);
-        context.setTarget(new MessageTestTarget());
+        if (Objects.nonNull(context)) { // this is needed as the context is null when there are no pacts to verify
+            given(catalogueService.productExists(any())).willReturn(true);
+            context.setTarget(new MessageTestTarget());
+        }
     }
 
     @TestTemplate
     @ExtendWith(PactVerificationSpringProvider.class)
     void verifyContracts(PactVerificationContext context) {
-        context.verifyInteraction();
+        if (Objects.nonNull(context)) {  // this is needed as the context is null when there are no pacts to verify
+            context.verifyInteraction();
+        }
     }
 
     @State("a non-empty cart with id 6e61fced-2bbd-431c-8d92-9e9052ffe8ff is checked out")
