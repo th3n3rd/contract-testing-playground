@@ -1,6 +1,7 @@
 package com.example.cart;
 
 import feign.FeignException;
+import feign.RetryableException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -19,7 +20,7 @@ class CatalogueService {
         try {
             var product = catalogueClient.findProduct(productId);
             return Objects.nonNull(product);
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException.NotFound | RetryableException e) {
             return false;
         }
     }
