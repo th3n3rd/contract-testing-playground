@@ -43,6 +43,9 @@ class ContractTests {
     void givenProductExist() {
         productRepository.save(new Product(UUID.fromString("7f7b6b14-4034-429f-a286-e3946b135179")));
     }
+
+    @State("a product with id fc19f260-fcce-4808-b8b2-470d06b49987 does not exists")
+    void givenProductDoesNotExist() {}
 }
 
 

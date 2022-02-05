@@ -14,7 +14,7 @@ class ProductService {
     }
 
     Product getProduct(UUID productId) {
-        return productRepository.getById(productId);
+        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
 }
