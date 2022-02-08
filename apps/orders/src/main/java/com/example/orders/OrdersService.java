@@ -15,14 +15,8 @@ class OrdersService {
         this.ordersRepository = ordersRepository;
     }
 
-    Order placeOrder(Cart cart) {
-        var order = Order.create(
-            cart.getItems()
-                .stream()
-                .map(Cart.Item::getProductId)
-                .map(Order.LineItem::new)
-                .collect(Collectors.toList())
-        );
+    Order placeOrder(CheckoutDetails checkoutDetails) {
+        var order = Order.create(checkoutDetails);
         ordersRepository.save(order);
         messagingGateway.send(OrderPlaced.from(order));
         return order;

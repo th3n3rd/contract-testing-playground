@@ -1,6 +1,7 @@
 package com.example.cart;
 
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,12 @@ class MessagingGateway {
     }
 
     void send(Object message) {
-        streamBridge.send(MessagingChannels.Out, message);
+        streamBridge.send(
+            MessagingBindings.Out,
+            MessageBuilder
+                .withPayload(message)
+                .setHeader("type", message.getClass().getSimpleName())
+                .build()
+        );
     }
 }

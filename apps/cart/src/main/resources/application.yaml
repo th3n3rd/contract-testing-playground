@@ -1,4 +1,10 @@
+server:
+  port: 8081
+
 spring:
   cloud:
     stream:
-      source: checkout
+      bindings:
+        cart-out-0:
+          destination: ecommerce-messages
+      source:  cart

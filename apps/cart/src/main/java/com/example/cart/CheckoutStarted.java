@@ -13,6 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 class CheckoutStarted {
     private UUID cartId;
+    private String firstName;
+    private String lastName;
+    private PostalAddress postalAddress;
     private List<Item> items = new ArrayList<>();
 
     @Data

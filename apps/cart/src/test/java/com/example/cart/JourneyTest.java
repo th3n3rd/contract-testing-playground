@@ -13,27 +13,28 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.cart.Fixtures.Personas.bob;
 import static com.example.cart.Fixtures.Products;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@Import(TestMessagingInfra.class)
+@Import(ECommerceMessages.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class JourneyTest {
 
     @Autowired
-    private TestRestTemplate restClient;
-
-    @Autowired
-    private TestMessagingInfra messagingInfra;
+    private ECommerceMessages eCommerceMessages;
 
     @MockBean
     private CatalogueService catalogueService;
 
+    @Autowired
+    private TestRestTemplate restClient;
+
     @BeforeEach
     void setUp() {
-        messagingInfra.clear();
+        eCommerceMessages.clear();
         givenProductsExist(
             Products.shirt,
             Products.trousers
@@ -41,7 +42,7 @@ class JourneyTest {
     }
 
     @Test
-    void typicalJourney() throws IOException {
+    void typicalJourney() {
         var cart = createCart();
 
         var shirt = selectItem(Products.shirt);
@@ -54,19 +55,36 @@ class JourneyTest {
 
         assertItemsInCart(cart, List.of(shirt, trousers));
 
-        checkoutCart(cart);
+        checkoutCart(cart, checkoutDetails(bob.getFirstName(), bob.getLastName(), bob.getPostalAddress()));
 
-        assertCheckoutStarted(cart, List.of(shirt, trousers));
+        assertCheckoutStarted(
+            cart,
+            bob.getFirstName(),
+            bob.getLastName(),
+            bob.getPostalAddress(),
+            List.of(shirt, trousers)
+        );
     }
 
-    private void assertCheckoutStarted(CartResponse cart, List<AddItemToCartRequest> expectedItems) throws IOException {
-        var message = messagingInfra.takeMessage(CheckoutStarted.class);
+    private void assertCheckoutStarted(
+        CartResponse cart,
+        String firstName,
+        String lastName,
+        PostalAddress postalAddress,
+        List<AddItemToCartRequest> expectedItems
+    ) {
+        var message = eCommerceMessages.takeMessage(CheckoutStarted.class);
 
         var itemsCheckedOut = message
             .getItems()
             .stream()
             .map(CheckoutStarted.Item::getProductId)
             .collect(Collectors.toList());
+
+        assertThat(message.getCartId()).isEqualTo(cart.getId());
+        assertThat(message.getFirstName()).isEqualTo(firstName);
+        assertThat(message.getLastName()).isEqualTo(lastName);
+        assertThat(message.getPostalAddress()).isEqualTo(postalAddress);
 
         assertThat(itemsCheckedOut).containsAll(
             expectedItems
@@ -76,10 +94,10 @@ class JourneyTest {
         );
     }
 
-    private CartResponse checkoutCart(CartResponse cart) {
+    private CartResponse checkoutCart(CartResponse cart, CheckoutRequest checkout) {
         return restClient.postForObject(
             "/carts/{cartId}/checkout",
-            null,
+            checkout,
             CartResponse.class,
             cart.getId()
         );
@@ -119,5 +137,17 @@ class JourneyTest {
         for (UUID productId : products) {
             given(catalogueService.productExists(productId)).willReturn(true);
         }
+    }
+
+    private CheckoutRequest checkoutDetails(
+        String firstName,
+        String lastName,
+        PostalAddress postalAddress
+    ) {
+        return new CheckoutRequest(
+            firstName,
+            lastName,
+            postalAddress
+        );
     }
 }

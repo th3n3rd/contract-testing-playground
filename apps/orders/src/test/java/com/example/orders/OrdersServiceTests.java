@@ -8,11 +8,12 @@ import org.springframework.context.annotation.Import;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.example.orders.Fixtures.Personas.bob;
 import static com.example.orders.Fixtures.Products;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-@Import(TestMessagingInfra.class)
+@Import(EcommerceMessages.class)
 @SpringBootTest
 class OrdersServiceTests {
 
@@ -24,13 +25,20 @@ class OrdersServiceTests {
 
     @Test
     void persistAnOrderWhenPlaced() {
-        var order = ordersService.placeOrder(new Cart(
+        var order = ordersService.placeOrder(new CheckoutDetails(
+            bob.getFirstName(),
+            bob.getLastName(),
+            bob.getPostalAddress(),
             List.of(
-                new Cart.Item(Products.shirt)
+                new CheckoutDetails.Item(Products.shirt)
             )
         ));
 
         var persistedOrder = ordersRepository.getById(order.getId());
+
+        assertThat(persistedOrder.getFirstName()).isEqualTo(bob.getFirstName());
+        assertThat(persistedOrder.getLastName()).isEqualTo(bob.getLastName());
+        assertThat(persistedOrder.getPostalAddress()).isEqualTo(bob.getPostalAddress());
         assertThat(persistedOrder.getLineItems()).hasSize(1);
         assertThat(persistedOrder.getLineItems().get(0).getProductId()).isEqualTo(Products.shirt);
     }

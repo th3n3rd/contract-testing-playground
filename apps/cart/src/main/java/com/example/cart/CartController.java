@@ -45,8 +45,12 @@ class CartController {
     }
 
     @PostMapping("/carts/{cartId}/checkout")
-    CartResponse checkoutCart(@PathVariable UUID cartId) {
-        var cart = cartService.checkoutCart(cartId);
+    CartResponse checkoutCart(@PathVariable UUID cartId, @RequestBody CheckoutRequest payload) {
+        var cart = cartService.checkoutCart(cartId, new CheckoutDetails(
+            payload.getFirstName(),
+            payload.getLastName(),
+            payload.getPostalAddress()
+        ));
         return CartResponse.from(cart);
     }
 

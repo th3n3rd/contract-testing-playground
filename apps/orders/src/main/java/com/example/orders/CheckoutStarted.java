@@ -11,6 +11,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 class CheckoutStarted {
+    private String firstName;
+    private String lastName;
+    private PostalAddress postalAddress;
     private List<Item> items;
 
     @Data

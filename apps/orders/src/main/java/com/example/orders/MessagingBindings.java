@@ -1,5 +1,5 @@
 package com.example.orders;
 
-class MessagingChannels {
+class MessagingBindings {
     final static String Out = "orders-out-0";
 }

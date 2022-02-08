@@ -1,4 +1,18 @@
+server:
+  port: 8083
+
 spring:
+  cloud:
+    stream:
+      function:
+        routing:
+          enabled: true
+      bindings:
+        functionRouter-in-0:
+          destination: ecommerce-messages
+        orders-out-0:
+          destination: ecommerce-messages
+      source: orders
   jpa:
     properties:
       hibernate.globally_quoted_identifiers: true

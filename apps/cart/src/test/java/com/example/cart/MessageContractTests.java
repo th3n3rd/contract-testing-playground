@@ -1,5 +1,7 @@
 package com.example.cart;
 
+import au.com.dius.pact.core.model.messaging.Message;
+import au.com.dius.pact.provider.MessageAndMetadata;
 import au.com.dius.pact.provider.PactVerifyProvider;
 import au.com.dius.pact.provider.junit5.MessageTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
@@ -15,19 +17,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.example.cart.Fixtures.*;
+import static com.example.cart.Fixtures.Personas.bob;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+@ActiveProfiles("pact")
 @IgnoreNoPactsToVerify
 @PactBroker
 @Provider("cart")
-@Import(TestMessagingInfra.class)
+@Import(ECommerceMessages.class)
 @SpringBootTest
 public class MessageContractTests {
 
@@ -41,7 +47,7 @@ public class MessageContractTests {
     private CatalogueService catalogueService;
 
     @Autowired
-    private TestMessagingInfra messagingInfra;
+    private ECommerceMessages eCommerceMessages;
 
     @BeforeEach
     void setUp(PactVerificationContext context) {
@@ -69,13 +75,17 @@ public class MessageContractTests {
                 Cart.Item.of(Products.trousers)
             )
         ));
-        cartService.checkoutCart(cartId);
+        cartService.checkoutCart(cartId, new CheckoutDetails(
+            bob.getFirstName(),
+            bob.getLastName(),
+            bob.getPostalAddress()
+        ));
     }
 
     @PactVerifyProvider("a checkout started event")
-    String checkoutStarted() {
-        var message = messagingInfra.takeMessage();
-        return new String(message.getPayload());
+    MessageAndMetadata checkoutStarted() {
+        var message = eCommerceMessages.takeMessage();
+        return new MessageAndMetadata(message.getPayload(), message.getHeaders());
     }
 
 }

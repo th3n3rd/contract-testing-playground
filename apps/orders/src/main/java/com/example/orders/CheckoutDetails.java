@@ -10,7 +10,10 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class Cart {
+class CheckoutDetails {
+    private String firstName;
+    private String lastName;
+    private PostalAddress postalAddress;
     private List<Item> items;
 
     @Data

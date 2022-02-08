@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Embeddable;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 class OrderPlaced {
     private UUID orderId;
+    private String firstName;
+    private String lastName;
+    private PostalAddress postalAddress;
     private List<LineItem> lineItems;
 
     @Data
@@ -25,6 +29,9 @@ class OrderPlaced {
     static OrderPlaced from(Order order) {
         return new OrderPlaced(
             order.getId(),
+            order.getFirstName(),
+            order.getLastName(),
+            order.getPostalAddress(),
             order.getLineItems()
                 .stream()
                 .map(Order.LineItem::getProductId)

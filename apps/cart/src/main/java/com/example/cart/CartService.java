@@ -39,10 +39,13 @@ class CartService {
             .orElseThrow(() -> new CartNotFoundException(cartId));
     }
 
-    Cart checkoutCart(UUID cartId) {
+    Cart checkoutCart(UUID cartId, CheckoutDetails checkoutDetails) {
         var cart = getCart(cartId);
         messagingGateway.send(new CheckoutStarted(
             cart.getId(),
+            checkoutDetails.getFirstName(),
+            checkoutDetails.getLastName(),
+            checkoutDetails.getPostalAddress(),
             cart.getItems()
                 .stream()
                 .map(Cart.Item::getProductId)

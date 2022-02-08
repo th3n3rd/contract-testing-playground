@@ -13,10 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import static com.example.cart.Fixtures.Products;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ActiveProfiles("pact")
 @PactTestFor(pactVersion = PactSpecVersion.V3)
 @ExtendWith(PactConsumerTestExt.class)
 @Import(CatalogueClientFactory.class)
