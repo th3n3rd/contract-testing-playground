@@ -29,16 +29,4 @@ public class JourneySteps {
         bob.checkout();
     }
 
-    @Given("Bob enters valid contact details")
-    public void bob_enters_valid_contact_details() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-
-    @Then("Bob receives and order confirmation")
-    public void bob_receives_and_order_confirmation() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-
 }
