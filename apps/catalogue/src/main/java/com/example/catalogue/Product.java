@@ -15,4 +15,8 @@ import java.util.UUID;
 class Product {
     @Id
     private UUID id;
+
+    static Product create() {
+        return new Product(UUID.randomUUID());
+    }
 }

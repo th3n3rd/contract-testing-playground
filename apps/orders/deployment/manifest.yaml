@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: orders
+    app.kubernetes.io/part-of: ecommerce
+  name: orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+        app.kubernetes.io/part-of: ecommerce
+    spec:
+      containers:
+      - image: ecommerce-orders:0.0.1-SNAPSHOT
+        name: orders
+        env:
+          - name: server.port
+            value: "8080"
+          - name: management.server.port
+            value: "8081"
+          - name: logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter
+            value: DEBUG
+          - name: spring.cloud.stream.binders.main.environment.spring.rabbitmq.host
+            value: message-queue-rabbitmq
+          - name: spring.cloud.stream.binders.main.type
+            value: rabbit
+          - name: spring.cloud.stream.binders.main.environment.spring.rabbitmq.username
+            value: ecommerce
+          - name: spring.cloud.stream.binders.main.environment.spring.rabbitmq.password
+            value: ecommerce
+        ports:
+          - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          initialDelaySeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+  labels:
+    app.kubernetes.io/part-of: ecommerce
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: orders
