@@ -73,6 +73,18 @@
 						</exclude>
 					</excludes>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-image</goal>
+						</goals>
+						<configuration>
+							<image>
+								<name>docker.io/ecommerce-${project.artifactId}:${project.version}</name>
+							</image>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
